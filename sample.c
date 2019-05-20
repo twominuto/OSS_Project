@@ -70,7 +70,7 @@ int readString(int) {
 
 int readNumber(int startIndex) {
     // digit 이 나오지 않을때까지 읽기
-    int position = startIndex;
+    int position = startIndex + 1;
     while(1){
         if(buffer[position] >= '0' && buffer[position] <= '9')
             position++;
