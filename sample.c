@@ -3,10 +3,6 @@
 #include <string.h>
 #include <ctype.h>
 
-int curr_pos ;
-char *buffer = 0x0 ;
-int array_index = 0 ;
-
 typedef enum {
     UNDEFINED = 0,
     OBJECT = 1,
@@ -28,6 +24,11 @@ int readValue(int) ;
 int readString(int) ;
 int readNumber(int) ;
 
+tok_t* token_array = 0x0 ;
+int array_index = 0 ;
+char *buffer = 0x0 ;
+int curr_pos ;
+
 int main(int argc, char *argv[])
 {
     if (argc == 1)
@@ -35,7 +36,6 @@ int main(int argc, char *argv[])
     FILE *fp = fopen(argv[1], "r") ;
     char temp_buf[512] ;
     int len=0, s ;
-    tok_t* token_array = 0x0 ;
 
     // read input json and save in buffer
     // `len` means whole length
