@@ -1,9 +1,24 @@
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 
 int curr_pos ;
-char *buffer;
-int size;
+char *buffer = 0x0 ;
+int index = 0 ;
+
+typedef enum {
+    UNDEFINED = 0,
+    OBJECT = 1,
+    ARRAY = 2,
+    STRING = 3,
+    PRIMITIVE = 4
+} type_t ;
+
+typedef struct {
+    type_t type ;
+    int start ;
+    int end ;
+} tok_t ;
 
 int readJSON(int) ;
 int readPair(int) ;
@@ -15,39 +30,70 @@ int readNumber(int) ;
 int main()
 {
     FILE *fp = fopen("input.json", "r") ;
+    char temp_buf[512] ;
+    int len=0, s ;
+    tok_t* token_array = 0x0 ;
 
-    // 파일 크기 구하기
-    fseek(fp, 0, SEEK_END);
-    size = ftell(fp);
-    fseek(fp, 0, SEEK_SET);
+    // read input json and save in buffer
+    // `len` means whole length
+    while((s = fread(temp_buf, sizeof(char), sizeof(temp_buf), fp)) > 0) {
+        temp_buf[s] = 0x0;
+        if (buffer == 0x0) {
+            buffer = strdup(temp_buf);
+            len = s;
+        } else {
+            buffer = realloc(buffer, len+s+1);
+            strncpy(buffer+len, temp_buf, s);
+            data[len+s] = 0x0;
+            len += s;
+        }
+    }
 
-    // 파일 크기 + NULL 공간만큼 메모리를 할당하고 0으로 초기화
-    buffer = malloc(size + 1);
-    memset(buffer, 0, size + 1);
-    fread(buffer, size, 1, fp) ;
-
+    token_array = (size_t*)malloc(sizeof(size_t)*len) ;
+    if (token_array == NULL) {
+        printf("Error.\n");
+        exit(-1) ;
+    }
+     
+    int i=0 ;
     while (buffer[i] != '{') {
         curr_pos ++ ;
     }
-
+    int start = curr_pos ;
     int end = readJSON(curr_pos) ;
 
-
+    token_array[index] = {OBJECT, start, end} ;
 }
 
 
-int readPair(int) {
+int readPair(int pos) {
+    while (buffer[pos])!='\"') // 이 부분 " 으로 처리할지 blank space로 처리할지 !
+        pos++ ;
+
+    int start_str = pos ;
     // buffer[start] 부터 쭉 읽어가면서
     // string을 읽어와서 key에 저장
+    int end_str = readString(start_str) ;
+    pos = end_str ;
+    
     // value를 읽는 함수를 호출
-    // 함수가 종료될떄 끝난 인덱스 리턴
+    while (buffer[pos])!=':')
+        pos++ ;
 
+    int start_val = pos ;
+    int end_val = readValue(start_val) ;
     // 전체 structure에 읽은 값 차례대로 저장
+    token_array[index++] = {start_str, end_str} ;
+    token_array[index++] = {start_val, end_val} ;
+    
+    return end_val ;
 }
 
 int readJSON(int start) {
     //  readPair 호출
     // comma가 나오지 않을 때까지 호출
+
+    // }가 나오면 종료 해주기
 }
 
 int readArray(int) {
