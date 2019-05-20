@@ -37,8 +37,6 @@ int main(int argc, char *argv[])
     char temp_buf[512] ;
     int len=0, s ;
 
-    // read input json and save in buffer
-    // `len` means whole length
     while((s = fread(temp_buf, sizeof(char), sizeof(temp_buf), fp)) > 0) {
         temp_buf[s] = 0x0;
         if (buffer == 0x0) {
@@ -93,6 +91,17 @@ int readPair(int pos) {
 }
 
 int readJSON(int start) {
+    int position = start + 1;
+    while(1){
+        if (buffer[start]==','){
+            readPair(position);
+            position++;
+            }
+        else if (buffer[start]=='}'){
+            break;
+            }
+    }
+    return position - 1;
     //  readPair 호출
     // comma가 나오지 않을 때까지 호출
 
@@ -113,8 +122,19 @@ int readValue(int) {
     // true / false / null 등이 json에서 어떻게 표현되는지 확인
 }
 
-int readString(int) {
+int readString(int start) {
+    int pos = start + 1;
+    while(1){
+        if (isalpha(buffer[pos]) || buffer[pos] == ' '){
+            pos++;
+        }
+        else if (buffer[pos]=='\"'){
+            break;
+        }
+        return pos - 1;
+    }
     // "이 나올때까지 계속해서 읽는데, 이때 \ 유의하면서 읽기
+    //?
 }
 
 int readNumber(int startIndex) {
