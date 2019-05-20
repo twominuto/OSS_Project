@@ -121,11 +121,10 @@ int readNumber(int startIndex) {
     // digit 이 나오지 않을때까지 읽기
     int position = startIndex + 1;
     while(1){
-        if(buffer[position] >= '0' && buffer[position] <= '9')
+        if(isdigit(buffer[position]))
             position++;
         else
             break;
     }
-    return position-1;
-
+    return position - 1;
 }
