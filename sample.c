@@ -68,6 +68,15 @@ int readString(int) {
     // "이 나올때까지 계속해서 읽는데, 이때 \ 유의하면서 읽기
 }
 
-int readNumber(int) {
+int readNumber(int startIndex) {
     // digit 이 나오지 않을때까지 읽기
+    int position = startIndex;
+    while(1){
+        if(buffer[position] >= '0' && buffer[position] <= '9')
+            position++;
+        else
+            break;
+    }
+    return position-1;
+
 }
