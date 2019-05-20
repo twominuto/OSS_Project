@@ -1,10 +1,11 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 
 int curr_pos ;
 char *buffer = 0x0 ;
-int index = 0 ;
+int array_index = 0 ;
 
 typedef enum {
     UNDEFINED = 0,
@@ -46,12 +47,12 @@ int main(int argc, char *argv[])
         } else {
             buffer = realloc(buffer, len+s+1);
             strncpy(buffer+len, temp_buf, s);
-            data[len+s] = 0x0;
+            buffer[len+s] = 0x0;
             len += s;
         }
     }
 
-    token_array = (size_t*)malloc(sizeof(size_t)*len) ;
+    token_array = (tok_t*)malloc(sizeof(tok_t)*len) ;
     if (token_array == NULL) {
         printf("Error.\n");
         exit(-1) ;
@@ -64,12 +65,12 @@ int main(int argc, char *argv[])
     int start = curr_pos ;
     int end = readJSON(curr_pos) ;
 
-    token_array[index] = {OBJECT, start, end} ;
+    token_array[array_index++] = {OBJECT, start, end} ;
 }
 
 
 int readPair(int pos) {
-    while (buffer[pos])!='\"') // 이 부분 " 으로 처리할지 blank space로 처리할지 !
+    while (buffer[pos]!='\"') // 이 부분 " 으로 처리할지 blank space로 처리할지 !
         pos++ ;
 
     int start_str = pos ;
@@ -79,14 +80,14 @@ int readPair(int pos) {
     pos = end_str ;
     
     // value를 읽는 함수를 호출
-    while (buffer[pos])!=':')
+    while (buffer[pos]!=':')
         pos++ ;
 
     int start_val = pos ;
     int end_val = readValue(start_val) ;
     // 전체 structure에 읽은 값 차례대로 저장
-    token_array[index++] = {start_str, end_str} ;
-    token_array[index++] = {start_val, end_val} ;
+    token_array[array_index++] = {start_str, end_str} ;
+    token_array[array_index++] = {start_val, end_val} ;
 
     return end_val ;
 }
