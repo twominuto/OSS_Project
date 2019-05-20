@@ -27,9 +27,11 @@ int readValue(int) ;
 int readString(int) ;
 int readNumber(int) ;
 
-int main()
+int main(int argc, char *argv[])
 {
-    FILE *fp = fopen("input.json", "r") ;
+    if (argc == 1)
+        argv[1] = "input.json" ;
+    FILE *fp = fopen(argv[1], "r") ;
     char temp_buf[512] ;
     int len=0, s ;
     tok_t* token_array = 0x0 ;
@@ -85,7 +87,7 @@ int readPair(int pos) {
     // 전체 structure에 읽은 값 차례대로 저장
     token_array[index++] = {start_str, end_str} ;
     token_array[index++] = {start_val, end_val} ;
-    
+
     return end_val ;
 }
 
