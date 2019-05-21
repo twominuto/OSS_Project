@@ -139,12 +139,22 @@ int readString(int start) {
 
 int readNumber(int startIndex) {
     // digit 이 나오지 않을때까지 읽기
+    int dot = 0;
     int position = startIndex + 1;
+
     while(1){
         if(isdigit(buffer[position]))
             position++;
-        else
+        else if(buffer[position] == '.'){
+            if(++dot == 2){
+                return -1;
+            }
+            position++;
+        }
+        else if(buffer[position] == ',')
             break;
+        else
+            return -1;
     }
-    return position - 1;
+    return position-1;
 }
