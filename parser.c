@@ -31,8 +31,10 @@ int curr_pos ;
 
 int main(int argc, char *argv[])
 {
-    if (argc == 1)
-        argv[1] = "input.json" ;
+    if (argc != 2) {
+        printf("Give file name as args.\n") ;
+        exit(-1) ;
+    }
     FILE *fp = fopen(argv[1], "r") ;
     char temp_buf[512] ;
     int len=0, s ;
