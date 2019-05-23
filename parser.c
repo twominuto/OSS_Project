@@ -84,9 +84,6 @@ int readPair(int pos) {
     int start_val = pos ;
     int end_val = readValue(start_val) ;
     // 전체 structure에 읽은 값 차례대로 저장
-    token_array[token_index++] = {start_str, end_str} ;
-    token_array[token_index++] = {start_val, end_val} ;
-
     return end_val ;
 }
 
