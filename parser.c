@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    token_array = (tok_t*)malloc(sizeof(tok_t)*len) ;
+    token_array = (tok_t*)malloc(sizeof(tok_t)*50) ;
     if (token_array == NULL) {
         printf("Error.\n");
         exit(-1) ;
@@ -63,7 +63,10 @@ int main(int argc, char *argv[])
     int start = curr_pos ;
     int end = readJSON(curr_pos) ;
 
-    token_array[token_index++] = {OBJECT, start, end} ;
+    token_array[token_index].type = OBJECT ;
+    token_array[token_index].start = start ;
+    token_array[token_index].end = end ;
+    token_index += 1 ;
 }
 
 
