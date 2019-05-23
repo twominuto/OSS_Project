@@ -68,10 +68,11 @@ int main(int argc, char *argv[])
         // allocate memory to print token's content        
         int strsize = token_array[i].end-token_array[i].start+1 ;
         
-        char *content = (char*)malloc((strsize+2) * sizeof(char)) ;
+        char *content = (char*)malloc((strsize) * sizeof(char)) ;
         memcpy(content, &buffer[token_array[i].start], strsize) ;
         type_t temp = token_array[i].type ;
-        printf("%2d | %s (%s, %d to %d)\n", i, content, strings[temp], token_array[i].start, token_array[i].end) ;
+        content[strsize] = 0x0 ;
+        printf("%2d | %s (%s, %d to %d)\n", i+1, content, strings[temp], token_array[i].start, token_array[i].end) ;
         free(content) ;
     }
 }
@@ -85,27 +86,22 @@ int readPair(int pos) {
     int start_str = pos ;
     // buffer[start] 부터 쭉 읽어가면서
     // string을 읽어와서 key에 저장
-    int end_str = readString(start_str) ;
-    pos = end_str ;
-
+    pos = readString(start_str) ;
     // value를 읽는 함수를 호출
     while (buffer[pos]!=':')
         pos++ ;
 
-    int start_val = pos ;
-    int end_val = readValue(start_val) ;
+    int end_val = readValue(pos) ;
     // 전체 structure에 읽은 값 차례대로 저장
     return end_val ;
 }
 
 int readJSON(int start) {
     printf("JSON hi\n") ;
-    int position = start + 1;
-    while(1){
+    int position = readPair(start);
+    while(buffer[position]!='}'){
         if (buffer[position]==','){
-            readPair(position);
-        } else if (buffer[position]=='}'){
-            break;
+            position = readPair(position);
         }
         position++;
     }
@@ -114,21 +110,33 @@ int readJSON(int start) {
     token_array[token_index].end = position ;
     token_index += 1 ;
 
-    return position - 1;
-    //  readPair 호출
-    // comma가 나오지 않을 때까지 호출
-
-    // }가 나오면 종료 해주기
+    return position ;
 }
 
-//buffer가 아니라 dynamic memory allocation 
 int readArray(int curr)
 {
-    printf("array \n") ;
+    printf("array2 %c\n", buffer[curr+1]) ;
     int start_curr = curr ;
-    while (buffer[curr]!=']')
+    while (buffer[curr]!=']') {
         curr += 1;
-
+        if (buffer[curr] == '"') {
+            curr = readString(curr) ;
+        } else if ( isdigit(buffer[curr]) || buffer[curr]=='-') {
+            curr = readNumber(curr) ;
+        } else if (buffer[curr] == '{') {
+            curr = readJSON(curr) ;
+        } else if (buffer[curr] == '[') {
+            curr = readArray(curr) ;
+        } else if (buffer[curr] == 't' || buffer[curr] == 'f' || buffer[curr] == 'n') {
+            while(!isalpha(buffer[curr]))
+                curr ++ ;
+            token_array[token_index].type = PRIMITIVE ;
+            token_array[token_index].start = start_curr ;
+            token_array[token_index].end = curr ;
+            token_index += 1 ;
+        }
+    }
+        
     token_array[token_index].type = ARRAY ;
     token_array[token_index].start = start_curr ;
     token_array[token_index].end = curr ;
@@ -139,9 +147,9 @@ int readArray(int curr)
 
 int readValue(int curr)
 {
-    while (isblank(buffer[curr]) || buffer[curr]==':')
+    while (isspace(buffer[curr]) || buffer[curr]==':')
         curr += 1 ;
-    printf("value %c\n", buffer[curr]) ;
+    printf("now value %c\n", buffer[curr]) ;
     int return_pos ;
     
     if (buffer[curr] == '"') {
