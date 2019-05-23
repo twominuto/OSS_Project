@@ -22,7 +22,7 @@ int readPair(int) ;
 int readArray(int) ;
 int readValue(int) ;
 int readString(int) ;
-int readNumber(int) ;
+void readNumber(int) ;
 
 tok_t* token_array = 0x0 ;
 int token_index = 0 ;
@@ -195,24 +195,39 @@ int readString(int start) {
     //?
 }
 
-int readNumber(int startIndex) {
+void readNumber(int position) {
     // digit 이 나오지 않을때까지 읽기
+    
+    // 오류 체크 -> digit이 아닐 경우 함수 탈출
+    if(!isdigit(buffer[curr_pos]))
+        return;
     int dot = 0;
-    int position = startIndex + 1;
-
+    position = curr_pos;
+    int startIndex = curr_pos - 1;
+    int endIndex;
     while(1){
+        printf("\n current position is %d and buffer is %c",curr_pos, buffer[curr_pos]);
         if(isdigit(buffer[position]))
             position++;
         else if(buffer[position] == '.'){
             if(++dot == 2){
-                return -1;
+                //return -1;
             }
             position++;
         }
-        else if(buffer[position] == ',')
+        else if(buffer[position] == ','){
+            endIndex = position -1;
             break;
+        }
+
         else
-            return -1;
+            break;
     }
-    return position-1;
+
+    token_array[token_index].type = PRIMITIVE;
+    token_array[token_index].start = startIndex;
+    token_array[token_index].end = endIndex;
+    token_index++;
+    curr_pos = position;
+    //return position-1;
 }
