@@ -37,6 +37,7 @@ int main(int argc, char *argv[])
     FILE *fp = fopen(argv[1], "r") ;
     char temp_buf[512] ;
     int len=0, s ;
+    char *strings[] = {"UNDEFINED", "OBJECT", "ARRAY", "STRING", "PRIMITIVE"} ;
 
     while((s = fread(temp_buf, sizeof(char), sizeof(temp_buf), fp)) > 0) {
         temp_buf[s] = 0x0;
@@ -64,8 +65,14 @@ int main(int argc, char *argv[])
     int end = readJSON(start) ;
 
     for (int i=0 ; i<token_index ; i++) {
+        // allocate memory to print token's content        
+        int strsize = token_array[i].end-token_array[i].start+1 ;
+        
+        char *content = (char*)malloc((strsize+2) * sizeof(char)) ;
+        memcpy(content, &buffer[token_array[i].start], strsize) ;
         type_t temp = token_array[i].type ;
-        printf("%2d | %u | %d %d\n", i, temp, token_array[i].start, token_array[i].end) ;
+        printf("%2d | %s (%s, %d to %d)\n", i, content, strings[temp], token_array[i].start, token_array[i].end) ;
+        free(content) ;
     }
 }
 
@@ -164,7 +171,7 @@ int readValue(int curr)
 int readString(int start) {
     printf("string \n") ;
 
-    int return_pos = start ;
+    int return_pos = start+1 ;
     while(buffer[return_pos]!='"') {
         return_pos += 1 ;
     }
