@@ -16,13 +16,14 @@ typedef struct {
     int start ;
     int end ;
     int parent ;
+    int size ;
 } tok_t ;
 
 int readJSON(int, int) ;
 int readPair(int) ;
 int readArray(int, int) ;
 int readValue(int, int) ;
-int readString(int, int) ;
+int readString(int, int, int) ;
 int readNumber(int, int) ;
 
 tok_t* token_array = 0x0 ;
@@ -67,6 +68,7 @@ int main(int argc, char *argv[])
     
 
     while(key < 3) {
+        system("@cls||clear");
         printf("=================================\n") ;
         printf(" Parsing JSON file ...\n") ;
         printf(" 1. Check all token.\n") ;
@@ -84,9 +86,11 @@ int main(int argc, char *argv[])
                 memcpy(content, &buffer[token_array[i].start], strsize) ;
                 type_t temp = token_array[i].type ;
                 content[strsize] = 0x0 ;
-                printf("%2d | %s (%s, %d to %d, for key %d)\n", i, content, strings[temp], token_array[i].start, token_array[i].end, token_array[i].parent) ;
+                printf("%2d | %s (%s, %d to %d, for key %d, size %d)\n", i, content, strings[temp], token_array[i].start, token_array[i].end, token_array[i].parent, token_array[i].size) ;
                 free(content) ;
             }
+            getchar() ;
+            getchar() ;
         } else if (key == 2) {
             char input[16] ;
             printf("Give a key.\n") ;
@@ -117,8 +121,11 @@ int main(int argc, char *argv[])
                     content[strsize] = 0x0 ;
 
                     printf("%s\n", content) ;
+                    break ;
                 }
             }
+            getchar() ;
+            getchar() ;
         }
     }
     
@@ -129,11 +136,11 @@ int main(int argc, char *argv[])
 int readPair(int pos) {
     while (buffer[pos]!='"') // 이 부분 " 으로 처리할지 blank space로 처리할지 !
         pos++ ;
-
+    int count = 0 ;
     int start_str = pos ;
     // buffer[start] 부터 쭉 읽어가면서
     // string을 읽어와서 key에 저장
-    pos = readString(start_str, -1) ;
+    pos = readString(start_str, -1, 1) ;
     // value를 읽는 함수를 호출
     while (buffer[pos]!=':')
         pos++ ;
@@ -146,9 +153,11 @@ int readPair(int pos) {
 
 int readJSON(int start, int parent) {
     int position = readPair(start);
+    int count = 0 ;
     while(buffer[position]!='}'){
         if (buffer[position]==','){
             position = readPair(position);
+            count += 1 ;
         }
         position++;
     }
@@ -157,6 +166,7 @@ int readJSON(int start, int parent) {
     token_array[token_index].start = start ;
     token_array[token_index].end = position ;
     token_array[token_index].parent = parent ;
+    token_array[token_index].size = count + 1 ;
     token_index += 1 ;
 
     return position ;
@@ -165,10 +175,11 @@ int readJSON(int start, int parent) {
 int readArray(int curr, int parent)
 {
     int start_curr = curr ;
+    int count = 0 ;
     while (buffer[curr]!=']') {
         curr += 1;
         if (buffer[curr] == '"') {
-            curr = readString(curr, -1) ;
+            curr = readString(curr, -1, 0) ;
         } else if ( isdigit(buffer[curr]) || buffer[curr]=='-') {
             curr = readNumber(curr, -1) ;
         } else if (buffer[curr] == '{') {
@@ -182,14 +193,18 @@ int readArray(int curr, int parent)
             token_array[token_index].start = start_curr ;
             token_array[token_index].end = curr ;
             token_array[token_index].parent = parent ;
+            token_array[token_index].size = 0 ;
             token_index += 1 ;
         }
+        if (buffer[curr] == ',')
+            count += 1 ;
     }
         
     token_array[token_index].type = ARRAY ;
     token_array[token_index].start = start_curr ;
     token_array[token_index].end = curr ;
     token_array[token_index].parent = parent ;
+    token_array[token_index].size = count+1 ;
     token_index += 1 ;
 
     return curr ;
@@ -202,7 +217,7 @@ int readValue(int curr, int parent)
     int return_pos ;
     
     if (buffer[curr] == '"') {
-        return_pos = readString(curr, parent) ;
+        return_pos = readString(curr, parent, 0) ;
     } else if ( isdigit(buffer[curr]) || buffer[curr]=='-') {
         return_pos = readNumber(curr, parent) ;
     } else if (buffer[curr] == '{') {
@@ -218,6 +233,7 @@ int readValue(int curr, int parent)
         token_array[token_index].start = curr ;
         token_array[token_index].end = return_pos ;
         token_array[token_index].parent = parent ;
+        token_array[token_index].size = 0 ;
         token_index += 1 ;
     }
 
@@ -225,7 +241,7 @@ int readValue(int curr, int parent)
 }
 
 
-int readString(int start, int parent) {
+int readString(int start, int parent, int size) {
     int return_pos = start+1 ;
     while(buffer[return_pos]!='"') {
         return_pos += 1 ;
@@ -234,6 +250,7 @@ int readString(int start, int parent) {
     token_array[token_index].start = start ;
     token_array[token_index].end = return_pos ;
     token_array[token_index].parent = parent ;
+    token_array[token_index].size = size ;
     token_index += 1 ;
     return return_pos ;
 }
@@ -269,6 +286,7 @@ int readNumber(int position, int parent) {
     token_array[token_index].start = startIndex;
     token_array[token_index].end = endIndex;
     token_array[token_index].parent = parent ;
+    token_array[token_index].size = 0 ;
     token_index++;
     return position-1;
 }
