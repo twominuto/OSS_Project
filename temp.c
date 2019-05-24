@@ -63,18 +63,66 @@ int main(int argc, char *argv[])
         start ++ ;
     }
     int end = readJSON(start, -1) ;
+    int key = 0 ;
+    
 
-    for (int i=0 ; i<token_index ; i++) {
-        // allocate memory to print token's content        
-        int strsize = token_array[i].end-token_array[i].start+1 ;
-        
-        char *content = (char*)malloc((strsize) * sizeof(char)) ;
-        memcpy(content, &buffer[token_array[i].start], strsize) ;
-        type_t temp = token_array[i].type ;
-        content[strsize] = 0x0 ;
-        printf("%2d | %s (%s, %d to %d, for key %d)\n", i, content, strings[temp], token_array[i].start, token_array[i].end, token_array[i].parent) ;
-        free(content) ;
+    while(key < 3) {
+        printf("=================================\n") ;
+        printf(" Parsing JSON file ...\n") ;
+        printf(" 1. Check all token.\n") ;
+        printf(" 2. Check a value for key.\n") ;
+        printf(" 3. Exit.\n") ;
+        printf("=================================\n") ;
+    
+        scanf("%d", &key) ;
+        if (key == 1) {
+            for (int i=0 ; i<token_index ; i++) {
+                // allocate memory to print token's content        
+                int strsize = token_array[i].end-token_array[i].start+1 ;
+                
+                char *content = (char*)malloc((strsize) * sizeof(char)) ;
+                memcpy(content, &buffer[token_array[i].start], strsize) ;
+                type_t temp = token_array[i].type ;
+                content[strsize] = 0x0 ;
+                printf("%2d | %s (%s, %d to %d, for key %d)\n", i, content, strings[temp], token_array[i].start, token_array[i].end, token_array[i].parent) ;
+                free(content) ;
+            }
+        } else if (key == 2) {
+            char input[16] ;
+            printf("Give a key.\n") ;
+            scanf("%s", input) ;
+
+            int value = -1 ;
+
+            for (int i=0 ; i<token_index ; i++) {
+                int strsize = token_array[i].end-token_array[i].start+1 ;
+                char *content = (char*)malloc((strsize) * sizeof(char)) ;
+                memcpy(content, &buffer[token_array[i].start], strsize) ;
+                content[strsize] = 0x0 ;
+
+                if (strcmp(input, content)==0) {
+                    value = i ;
+                    break ;
+                }
+            }
+            if (value == -1) {
+                printf("No matching value.\n") ;
+                continue ;
+            }
+            for (int i=0 ; i<token_index ; i++) {
+                if (value==token_array[i].parent) {
+                    int strsize = token_array[i].end-token_array[i].start+1 ;
+                    char *content = (char*)malloc((strsize) * sizeof(char)) ;
+                    memcpy(content, &buffer[token_array[i].start], strsize) ;
+                    content[strsize] = 0x0 ;
+
+                    printf("%s\n", content) ;
+                }
+            }
+        }
     }
+    
+    
 }
 
 
