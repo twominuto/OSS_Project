@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
         printf(" 1. Check all token.\n") ;
         printf(" 2. Check a value for key.\n") ;
         printf(" 3. Exit.\n") ;
-        printf("=================================\n") ;
+        printf("=================================\n> ") ;
     
         scanf("%d", &key) ;
         if (key == 1) {
@@ -99,18 +99,20 @@ int main(int argc, char *argv[])
             int value = -1 ;
 
             for (int i=0 ; i<token_index ; i++) {
-                int strsize = token_array[i].end-token_array[i].start+1 ;
+                int strsize = token_array[i].end-token_array[i].start-1 ;
                 char *content = (char*)malloc((strsize) * sizeof(char)) ;
-                memcpy(content, &buffer[token_array[i].start], strsize) ;
+                memcpy(content, &buffer[token_array[i].start+1], strsize) ;
                 content[strsize] = 0x0 ;
 
                 if (strcmp(input, content)==0) {
-                    value = i ;
+                    value = i ;    
                     break ;
                 }
             }
             if (value == -1) {
                 printf("No matching value.\n") ;
+                getchar() ;
+                getchar() ;
                 continue ;
             }
             for (int i=0 ; i<token_index ; i++) {
