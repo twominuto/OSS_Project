@@ -51,7 +51,6 @@ int main(int argc, char *argv[])
             len += s;
         }
     }
-    printf("%s\n", buffer) ;
 
     token_array = (tok_t*)malloc(sizeof(tok_t)*50) ;
     if (token_array == NULL) {
@@ -79,7 +78,6 @@ int main(int argc, char *argv[])
 
 
 int readPair(int pos) {
-    printf("pair hi\n") ;
     while (buffer[pos]!='"') // 이 부분 " 으로 처리할지 blank space로 처리할지 !
         pos++ ;
 
@@ -97,7 +95,6 @@ int readPair(int pos) {
 }
 
 int readJSON(int start) {
-    printf("JSON hi\n") ;
     int position = readPair(start);
     while(buffer[position]!='}'){
         if (buffer[position]==','){
@@ -115,7 +112,6 @@ int readJSON(int start) {
 
 int readArray(int curr)
 {
-    printf("array2 %c\n", buffer[curr+1]) ;
     int start_curr = curr ;
     while (buffer[curr]!=']') {
         curr += 1;
@@ -149,7 +145,6 @@ int readValue(int curr)
 {
     while (isspace(buffer[curr]) || buffer[curr]==':')
         curr += 1 ;
-    printf("now value %c\n", buffer[curr]) ;
     int return_pos ;
     
     if (buffer[curr] == '"') {
@@ -177,8 +172,6 @@ int readValue(int curr)
 
 
 int readString(int start) {
-    printf("string \n") ;
-
     int return_pos = start+1 ;
     while(buffer[return_pos]!='"') {
         return_pos += 1 ;
@@ -191,7 +184,6 @@ int readString(int start) {
 }
 
 int readNumber(int position) {
-    printf("number\n") ;
     // digit 이 나오지 않을때까지 읽기
     
     // 오류 체크 -> digit이 아닐 경우 함수 탈출
