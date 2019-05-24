@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
             getchar() ;
         } else if (key == 2) {
             char input[16] ;
-            printf("Give a key.\n") ;
+            printf("Give a key.\n> ") ;
             scanf("%s", input) ;
 
             int value = -1 ;
@@ -130,8 +130,6 @@ int main(int argc, char *argv[])
             getchar() ;
         }
     }
-    
-    
 }
 
 
