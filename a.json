@@ -1,0 +1,203 @@
+    {
+        "board game 1": {
+            "name": "Dalmuti",            
+            "players": "4-8",
+            "rental fee": 2000, 
+            "age" : 8,
+            "time taken" : "10-20 mins",  
+            "genre": ["family game", "party game"],
+            "system": "card management, trick-taking",
+            "instruction link" : "https://www.koreaboardgames.com/boardgame/game_view.php?prd_idx=16266" 
+        },
+        "board game 2": {
+            "name": "The Geniuse: Horror Race",            
+            "players": "2-10",
+            "rental fee": 3000, 
+            "age" : 6,
+            "time taken" : "30-40 mins",  
+            "genre": ["family game", "party game", "children's game"],
+            "system": "betting",
+            "instruction link" : "https://www.koreaboardgames.com/boardgame/game_view.php?prd_idx=16124" 
+        },
+        "board game 3": {
+            "name": "Tofu Kingdom",            
+            "players": "3-8",
+            "rental fee": 1200, 
+            "age" : 8,
+            "time taken" : "30-40 mins",  
+            "genre": ["family game", "children's game"],
+            "system": "collecting set, creating pattern",
+            "instruction link" : "https://www.koreaboardgames.com/boardgame/game_view.php?prd_idx=16652" 
+        },
+        "board game 4": {
+            "name": "Rummikub",            
+            "players": "2-4",
+            "rental fee": 2000, 
+            "age" : 8,
+            "time taken" : "50-60 mins",  
+            "genre": ["family game"],
+            "system": " ",
+            "instruction link" : "https://www.koreaboardgames.com/boardgame/game_view.php?prd_idx=13341" 
+        },
+        "board game 5": {
+            "name": "Mysterium",            
+            "players": "2-7",
+            "rental fee": 4500, 
+            "age" : 10,
+            "time taken" : "30-40 mins",  
+            "genre": ["family game", "party game", "children's game"],
+            "system": "theme game",
+            "instruction link" : "http://boardlife.co.kr/bbs_detail.php?bbs_num=2667&tb=info_files&id=&num=&pg=&game_id=5938&start=&b_category=&game_category" 
+        },
+        "board game 6": {
+            "name": "Cockroach poker",            
+            "players": "2-6",
+            "rental fee": 1600, 
+            "age" : 8,
+            "time taken" : "20-30 mins",  
+            "genre": ["gathering sets, card drafts"],
+            "system": " ",
+            "instruction link" : "https://www.koreaboardgames.com/boardgame/game_view.php?prd_idx=15564" 
+        },
+        "board game 7": {
+            "name": "Bang",            
+            "players": "4-7",
+            "rental fee": 2000, 
+            "age" : 8,
+            "time taken" : "20-45 mins",  
+            "genre": ["party game"],
+            "system": "gathering sets, card drafts, and display various capabilities among players",
+            "instruction link" : "https://www.koreaboardgames.com/boardgame/game_view.php?prd_idx=14619" 
+        },
+        "board game 8": {
+            "name": "Savotage",            
+            "players": "3-10",
+            "rental fee": 1200, 
+            "age" : 6,
+            "time taken" : "30-40 mins",  
+            "genre": ["family game", "party game", "children's game"],
+            "system": "management card",
+            "instruction link" : "https://www.koreaboardgames.com/boardgame/game_view.php?prd_idx=16561" 
+        },
+        "board game 9": {
+            "name": "The Geniuse: Horror Race",            
+            "players": "2-10",
+            "rental fee": 3000, 
+            "age" : 6,
+            "time taken" : "30-40 mins",  
+            "genre": ["family game", "party game", "children's game"],
+            "system": "betting",
+            "instruction link" : "https://www.koreaboardgames.com/boardgame/game_view.php?prd_idx=16266" 
+        },
+        "board game 10": {
+            "name": "Syth",            
+            "players": "2-5",
+            "rental fee": 8000, 
+            "age" : 14,
+            "time taken" : "110-120 mins",  
+            "genre": ["strategy game"],
+            "system": " ",
+            "instruction link" : "http://boardlife.co.kr/bbs_detail.php?bbs_num=2938&tb=info_files&id=&num=&pg=&game_id=5890&start=&b_category=&game_category" 
+        },
+        "board game 11": {
+            "name": "Splender",            
+            "players": "2-4",
+            "rental fee": 2000, 
+            "age" : 10,
+            "time taken" : "30-40 mins",  
+            "genre": ["family game", "strategy game"],
+            "system": "gathering sets, card drafts",
+            "instruction link" : "https://www.koreaboardgames.com/boardgame/game_view.php?prd_idx=15772" 
+        },
+        "board game 12": {
+            "name": "Citadel",            
+            "players": "2-8",
+            "rental fee": 2000, 
+            "age" : 10,
+            "time taken" : "20-60 mins",  
+            "genre": ["family game", "strategy game"],
+            "system": "gathering sets, card drafts, and display various capabilities among players",
+            "instruction link" : "https://www.koreaboardgames.com/boardgame/game_view.php?prd_idx=16671" 
+        },
+        "board game 13": {
+            "name": "Avalon",            
+            "players": "5-10",
+            "rental fee": 1500, 
+            "age" : 14,
+            "time taken" : "30-40 mins",  
+            "genre": ["party game"],
+            "system": "Simultaneous selection, voting, team play, and  display various abilities among players",
+            "instruction link" : "https://www.koreaboardgames.com/boardgame/game_view.php?prd_idx=16072" 
+        },
+        "board game 14": {
+            "name": "I'm the boss",            
+            "players": "3-6",
+            "rental fee": 4000, 
+            "age" : 6,
+            "time taken" : "60-70 mins",  
+            "genre": ["family game", "strategy game", "children's game"],
+            "system": "Collect sets, manage cards in hand, roll around the dice, roll around the dice (rullet) and move around and receive a hit",
+            "instruction link" : "https://www.koreaboardgames.com/boardgame/game_view.php?prd_idx=15408" 
+        },
+        "board game 15": {
+            "name": "Game of Thrones",            
+            "players": "3-6",
+            "rental fee": 7900, 
+            "age" : 6,
+            "time taken" : "30-40 mins",  
+            "genre": ["strategy game"],
+            "system": "Auctions, simultaneous selection, influence within territory, transfer of territory, elimination of participants, and display diverse capabilities among players",
+            "instruction link" : "https://www.koreaboardgames.com/boardgame/game_view.php?prd_idx=14912" 
+        },
+        "board game 16": {
+            "name": "Uno",            
+            "players": "4-5",
+            "rental fee": 1500, 
+            "age" : 6,
+            "time taken" : "30-40 mins",  
+            "genre": ["family game", "party game", "children's game"],
+            "system": "card game",
+            "instruction link" : "http://boardlife.co.kr/bbs_detail.php?bbs_num=1871&tb=info_files&id=&num=&pg=&game_id=2034&start=&b_category=&game_category" 
+        },
+        "board game 17": {
+            "name": "Jackson Ninth",            
+            "players": "2-10",
+            "rental fee": 1200, 
+            "age" : 8,
+            "time taken" : "30-40 mins",  
+            "genre": ["family game", "strategy game"],
+            "system": "simultaneous selection, card management in hand",
+            "instruction link" : "https://www.koreaboardgames.com/boardgame/game_view.php?prd_idx=14768" 
+        },
+        "board game 18": {
+            "name": "Chameleup",            
+            "players": "2-8",
+            "rental fee": 3900, 
+            "age" : 8,
+            "time taken" : "30-40 mins",  
+            "genre": ["family game", "betting game"],
+            "system": "Betting, rolling the dice, rolling the dice (rulet) and moving",
+            "instruction link" : "https://www.koreaboardgames.com/boardgame/game_view.php?prd_idx=16025" 
+        },
+        "board game 19": {
+            "name": "Catan",            
+            "players": "3-4",
+            "rental fee": 4900, 
+            "age" : 10,
+            "time taken" : "60-120 mins",  
+            "genre": ["family game", "strategy game"],
+            "system": "Transaction/trade, network construction, hand-held card management, assembly-type game board, rolling dice",
+            "instruction link" : "https://www.koreaboardgames.com/boardgame/game_view.php?prd_idx=16144" 
+        },
+        "board game 20": {
+            "name": "Clue",            
+            "players": "3-6",
+            "rental fee": 2500, 
+            "age" : 8,
+            "time taken" : "30-40 mins",  
+            "genre": ["deduction game"],
+            "system": "deduction game",
+            "instruction link" : "http://boardlife.co.kr/bbs_detail.php?bbs_num=2068&tb=info_movie&id=&num=&pg=&game_id=8752&start=&b_category=&game_category" 
+        }
+    }
+    
