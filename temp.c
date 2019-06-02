@@ -3,6 +3,9 @@
 #include <string.h>
 #include <ctype.h>
 
+#define true 1
+#define false 0
+
 typedef enum {
     UNDEFINED = 0,
     OBJECT = 1,
@@ -17,7 +20,15 @@ typedef struct {
     int end ;
     int parent ;
     int size ;
+    int recommend ;
 } tok_t ;
+
+typedef struct {
+    int player ;
+    int price ;
+    int age ;
+    int genre ;
+} tables ;
 
 int readJSON(int, int) ;
 int readPair(int) ;
@@ -52,7 +63,7 @@ int main(int argc, char *argv[])
             len += s;
         }
     }
-    token_array = (tok_t*)malloc(sizeof(tok_t)*70) ;
+    token_array = (tok_t*)malloc(sizeof(tok_t)*400) ;
     if (token_array == NULL) {
         printf("Error.\n");
         exit(-1) ;
@@ -70,7 +81,7 @@ int main(int argc, char *argv[])
         printf("=================================\n") ;
         printf(" Parsing JSON file ...\n") ;
         printf(" 1. Check all token.\n") ;
-        printf(" 2. Check a value for key.\n") ;
+        printf(" 2. Game Recommendation System.\n") ;
         printf(" 3. Exit.\n") ;
         printf("=================================\n> ") ;
     
@@ -90,48 +101,204 @@ int main(int argc, char *argv[])
             getchar() ;
             getchar() ;
         } else if (key == 2) {
-            char input[16] ;
-            printf("Give a key.\n> ") ;
-            scanf("%s", input) ;
+            int index = 0 ;
+            tables table[20] ;
+            printf("Please enter the number of people.\n> ") ;
+            int team_member ;
+            scanf("%d", &team_member) ;
 
-            int value = -1 ;
+            printf("Please enter the price you want.\n> ") ;
+            int price ;
+            scanf("%d", &price) ;
 
+            printf("Please enter the minimum age.\n> ") ;
+            int age ;
+            scanf("%d", &age) ;
+
+            printf("Please enter favorite genre.\n> ") ;
+            char genre[16] ;
+            getchar() ;
+            gets(genre) ;
+            int value ;
+
+            /* finding people */
             for (int i=0 ; i<token_index ; i++) {
-                // int strsize = token_array[i].end-token_array[i].start-1 ;
-                // char *content = (char*)malloc((strsize) * sizeof(char)) ;
-                // memcpy(content, &buffer[token_array[i].start+1], strsize) ;
-                // content[strsize] = 0x0 ;
-                int strsize = token_array[i].end-token_array[i].start ;
+                if (token_array[i].parent!=-1)
+                    continue ;
+                int strsize = token_array[i].end-token_array[i].start-1 ;
                 char *content = (char*)malloc((strsize) * sizeof(char)) ;
-                memcpy(content, &buffer[token_array[i].start], strsize) ;
+                memcpy(content, &buffer[token_array[i].start+1], strsize) ;
                 content[strsize] = 0x0 ;
+                if (strcmp("players", content)==0) {
+                    value = i ;   
+                    for (int j=0 ; j<token_index ; j++) {
+                        if (value==token_array[j].parent) {
+                            int strsize_ = token_array[j].end-token_array[j].start+1 ;
+                            char *content_ = (char*)malloc((strsize_) * sizeof(char)) ;
+                            memcpy(content_, &buffer[token_array[j].start], strsize_) ;
+                            content_[strsize_] = 0x0 ;
 
-                if (strcmp(input, content)==0) {
-                    value = i ;    
-                    break ;
+                            //printf("%s\n", content_) ;
+                            int dash = 0 ;
+                            for (int k=0 ; k<strlen(content_) ; k++) {
+                                if (content_[k]=='-') {
+                                    dash = k ;
+                                    break ;
+                                }
+                            }
+                            char temp[8] ;
+                            memcpy(temp, &content_[1], (dash)*sizeof(char)) ;
+                            //printf("%s   ", temp) ;
+                            int start_index = atoi(temp) ;
+                            memcpy(temp, &content_[dash+1], sizeof(char)*(strlen(content_)-dash)) ;
+                            int end_index = atoi(temp) ;
+                            //printf("%d %d %d\n", start_index, team_member, end_index) ;
+                            if ((start_index<=team_member) && (team_member<=end_index)) {
+                                table[index++].player = true ;
+                            } else {
+                                table[index++].player = false ;
+                            }
+                            free(content_) ;
+                            break ;
+                        }
+                    } 
                 }
+                free(content) ;
             }
-            if (value == -1) {
-                printf("No matching value.\n") ;
-                getchar() ;
-                getchar() ;
-                continue ;
-            }
+            index = 0 ;
+            /* finding price */
             for (int i=0 ; i<token_index ; i++) {
-                if (value==token_array[i].parent) {
-                    int strsize = token_array[i].end-token_array[i].start+1 ;
-                    char *content = (char*)malloc((strsize) * sizeof(char)) ;
-                    memcpy(content, &buffer[token_array[i].start], strsize) ;
-                    content[strsize] = 0x0 ;
+                if (token_array[i].parent!=-1)
+                    continue ;
+                int strsize = token_array[i].end-token_array[i].start-1 ;
+                char *content = (char*)malloc((strsize) * sizeof(char)) ;
+                memcpy(content, &buffer[token_array[i].start+1], strsize) ;
+                content[strsize] = 0x0 ;
+                if (strcmp("rental fee", content)==0) {
+                    value = i ;   
+                    for (int j=0 ; j<token_index ; j++) {
+                        if (value==token_array[j].parent) {
+                            int strsize_ = token_array[j].end-token_array[j].start+1 ;
+                            char *content_ = (char*)malloc((strsize_) * sizeof(char)) ;
+                            memcpy(content_, &buffer[token_array[j].start], strsize_) ;
+                            content_[strsize_] = 0x0 ;
+                            int rental = atoi(content_) ;
+                            if (price<rental) 
+                                table[index++].price = false ;
+                            else 
+                                table[index++].price = true ;
+                            free(content_) ;
+                            break ;
+                        }
+                    } 
+                }
+                free(content) ;
+            }
 
-                    printf("%s\n", content) ;
-                    break ;
+            /*finding age*/
+            index = 0 ;
+            for (int i=0 ; i<token_index ; i++) {
+                if (token_array[i].parent!=-1)
+                    continue ;
+                int strsize = token_array[i].end-token_array[i].start-1 ;
+                char *content = (char*)malloc((strsize) * sizeof(char)) ;
+                memcpy(content, &buffer[token_array[i].start+1], strsize) ;
+                content[strsize] = 0x0 ;
+                if (strcmp("age", content)==0) {
+                    value = i ;   
+                    for (int j=0 ; j<token_index ; j++) {
+                        if (value==token_array[j].parent) {
+                            int strsize_ = token_array[j].end-token_array[j].start+1 ;
+                            char *content_ = (char*)malloc((strsize_) * sizeof(char)) ;
+                            memcpy(content_, &buffer[token_array[j].start], strsize_) ;
+                            content_[strsize_] = 0x0 ;
+                            int input_age = atoi(content_) ;
+                            if (age>input_age) 
+                                table[index++].age = false ;
+                            else 
+                                table[index++].age = true ;
+                            free(content_) ;
+                            break ;
+                        }
+                    } 
+                }
+                free(content) ;
+            }
+
+            /*finding genre*/
+            index = 0 ;
+            for (int i=0 ; i<token_index ; i++) {
+                if (token_array[i].parent!=-1)
+                    continue ;
+                int strsize = token_array[i].end-token_array[i].start-1 ;
+                char *content = (char*)malloc((strsize) * sizeof(char)) ;
+                memcpy(content, &buffer[token_array[i].start+1], strsize) ;
+                content[strsize] = 0x0 ;
+                if (strcmp("genre", content)==0) {
+                    value = i ;   
+                    for (int j=0 ; j<token_index ; j++) {
+                        if (value==token_array[j].parent) {
+                            int strsize_ = token_array[j].end-token_array[j].start+1 ;
+                            char *content_ = (char*)malloc((strsize_) * sizeof(char)) ;
+                            memcpy(content_, &buffer[token_array[j].start], strsize_) ;
+                            content_[strsize_] = 0x0 ;
+                            char *str = strstr(content_, genre) ;
+                            if (str==NULL)
+                                table[index++].genre = false ;
+                            else 
+                                table[index++].genre = true ;
+
+                            free(content_) ;
+                            break ;
+                        }
+                    } 
+                }
+                free(content) ;
+            }
+            system("@cls||clear");
+            printf("========= Recommendation =========\n") ;
+            int flag = 0 ;
+            for (int k=0 ; k<index ; k++) {
+                //printf("%d %d %d %d\n",table[k].player, table[k].price, table[k].age, table[k].genre) ;
+                if (table[k].age==true && table[k].genre==true && table[k].player==true && table[k].price==true) {
+                    flag = 1 ;
+                    for (int i=0 ; i<token_index ; i++) {
+                        if (token_array[i].parent!=-1)
+                            continue ;
+                        int strsize = token_array[i].end-token_array[i].start-1 ;
+                        char *content = (char*)malloc((strsize) * sizeof(char)) ;
+                        memcpy(content, &buffer[token_array[i].start+1], strsize) ;
+                        content[strsize] = 0x0 ;
+                        char compare[16] ;
+                        sprintf(compare, "board game %d", k) ;
+                        if (strcmp(compare, content)==0) {
+                            value = i ;   
+                            for (int j=0 ; j<token_index ; j++) {
+                                if (value==token_array[j].parent) {
+                                    int strsize_ = token_array[j].end-token_array[j].start+1 ;
+                                    char *content_ = (char*)malloc((strsize_) * sizeof(char)) ;
+                                    memcpy(content_, &buffer[token_array[j].start], strsize_) ;
+                                    content_[strsize_] = 0x0 ;
+                                    printf("%s\n", content_) ;
+                                    free(content_) ;
+                                    break ;
+                                }
+                            } 
+                        }
+                        free(content) ;
+                    }
                 }
             }
+
+            if (flag == 0)
+                printf("There is no matching game.\n") ;
             getchar() ;
-            getchar() ;
+        } else {
+            break ;
         }
     }
+    free(buffer) ;
+    free(token_array) ;
 }
 
 
@@ -156,6 +323,7 @@ int readPair(int pos) {
 int readJSON(int start, int parent) {
     int position = readPair(start);
     int count = 0 ;
+    position += 1 ;
     while(buffer[position]!='}'){
         if (buffer[position]==','){
             position = readPair(position);
@@ -169,6 +337,7 @@ int readJSON(int start, int parent) {
     token_array[token_index].end = position ;
     token_array[token_index].parent = parent ;
     token_array[token_index].size = count + 1 ;
+    token_array[token_index].recommend = false ;
     token_index += 1 ;
 
     return position ;
@@ -196,6 +365,7 @@ int readArray(int curr, int parent)
             token_array[token_index].end = curr ;
             token_array[token_index].parent = parent ;
             token_array[token_index].size = 0 ;
+            token_array[token_index].recommend = false ;
             token_index += 1 ;
         }
         if (buffer[curr] == ',')
@@ -207,6 +377,7 @@ int readArray(int curr, int parent)
     token_array[token_index].end = curr ;
     token_array[token_index].parent = parent ;
     token_array[token_index].size = count+1 ;
+    token_array[token_index].recommend = false ;
     token_index += 1 ;
 
     return curr ;
@@ -236,6 +407,7 @@ int readValue(int curr, int parent)
         token_array[token_index].end = return_pos ;
         token_array[token_index].parent = parent ;
         token_array[token_index].size = 0 ;
+        token_array[token_index].recommend = false ;
         token_index += 1 ;
     }
 
@@ -253,8 +425,9 @@ int readString(int start, int parent, int size) {
     token_array[token_index].end = return_pos ;
     token_array[token_index].parent = parent ;
     token_array[token_index].size = size ;
+    token_array[token_index].recommend = false ;
     token_index += 1 ;
-    return return_pos+1 ;
+    return return_pos ;
 }
 
 int readNumber(int position, int parent) {
@@ -267,13 +440,14 @@ int readNumber(int position, int parent) {
     while((isdigit(buffer[position]) || buffer[position]=='.' || buffer[position]=='e' || buffer[position]=='E')) {
         position += 1 ;
     }
-    endIndex = position ;
+    endIndex = position-1 ;
 
     token_array[token_index].type = PRIMITIVE;
     token_array[token_index].start = startIndex;
     token_array[token_index].end = endIndex;
     token_array[token_index].parent = parent ;
     token_array[token_index].size = 0 ;
+    token_array[token_index].recommend = false ;
     token_index++;
     return position-1;
 }
