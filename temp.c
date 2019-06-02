@@ -40,7 +40,6 @@ int main(int argc, char *argv[])
     char temp_buf[512] ;
     int len=0, s ;
     char *strings[] = {"UNDEFINED", "OBJECT", "ARRAY", "STRING", "PRIMITIVE"} ;
-
     while((s = fread(temp_buf, sizeof(char), sizeof(temp_buf), fp)) > 0) {
         temp_buf[s] = 0x0;
         if (buffer == 0x0) {
@@ -53,8 +52,7 @@ int main(int argc, char *argv[])
             len += s;
         }
     }
-
-    token_array = (tok_t*)malloc(sizeof(tok_t)*50) ;
+    token_array = (tok_t*)malloc(sizeof(tok_t)*70) ;
     if (token_array == NULL) {
         printf("Error.\n");
         exit(-1) ;
@@ -63,9 +61,9 @@ int main(int argc, char *argv[])
     while (buffer[start] != '{') {
         start ++ ;
     }
+
     int end = readJSON(start, -1) ;
     int key = 0 ;
-    
 
     while(key < 3) {
         system("@cls||clear");
@@ -99,9 +97,13 @@ int main(int argc, char *argv[])
             int value = -1 ;
 
             for (int i=0 ; i<token_index ; i++) {
-                int strsize = token_array[i].end-token_array[i].start-1 ;
+                // int strsize = token_array[i].end-token_array[i].start-1 ;
+                // char *content = (char*)malloc((strsize) * sizeof(char)) ;
+                // memcpy(content, &buffer[token_array[i].start+1], strsize) ;
+                // content[strsize] = 0x0 ;
+                int strsize = token_array[i].end-token_array[i].start ;
                 char *content = (char*)malloc((strsize) * sizeof(char)) ;
-                memcpy(content, &buffer[token_array[i].start+1], strsize) ;
+                memcpy(content, &buffer[token_array[i].start], strsize) ;
                 content[strsize] = 0x0 ;
 
                 if (strcmp(input, content)==0) {
@@ -146,7 +148,7 @@ int readPair(int pos) {
         pos++ ;
 
     // readString은 다른 함수 호출하지 않으니까 그대로 써도 될듯..?
-    int end_val = readValue(pos, token_index-1) ;
+    int end_val = readValue(pos+1, token_index-1) ;
     // 전체 structure에 읽은 값 차례대로 저장
     return end_val ;
 }
@@ -252,35 +254,20 @@ int readString(int start, int parent, int size) {
     token_array[token_index].parent = parent ;
     token_array[token_index].size = size ;
     token_index += 1 ;
-    return return_pos ;
+    return return_pos+1 ;
 }
 
 int readNumber(int position, int parent) {
-    // digit 이 나오지 않을때까지 읽기
-    
-    // 오류 체크 -> digit이 아닐 경우 함수 탈출
-    if(!isdigit(buffer[position]))
-        return -1 ;
-    int dot = 0;
-    int startIndex = position - 1;
-    int endIndex;
-    while(1){
-        if(isdigit(buffer[position]))
-            position++;
-        else if(buffer[position] == '.'){
-            if(++dot == 2){
-                //return -1;
-            }
-            position++;
-        }
-        else if(buffer[position] == ','){
-            endIndex = position -1;
-            break;
-        }
-
-        else
-            break;
+    while(!isdigit(buffer[position]) && buffer[position]!='-') {
+        position += 1 ;
     }
+    int startIndex = position;
+    int endIndex = startIndex ;
+
+    while((isdigit(buffer[position]) || buffer[position]=='.' || buffer[position]=='e' || buffer[position]=='E')) {
+        position += 1 ;
+    }
+    endIndex = position ;
 
     token_array[token_index].type = PRIMITIVE;
     token_array[token_index].start = startIndex;
