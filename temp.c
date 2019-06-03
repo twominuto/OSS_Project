@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
             int team_member ;
             scanf("%d", &team_member) ;
 
-            printf("Please enter the price you want.\n> ") ;
+            printf("Please enter the maximum price you want.\n> ") ;
             int price ;
             scanf("%d", &price) ;
 
@@ -183,10 +183,11 @@ int main(int argc, char *argv[])
                             memcpy(content_, &buffer[token_array[j].start], strsize_) ;
                             content_[strsize_] = 0x0 ;
                             int rental = atoi(content_) ;
-                            if (price<rental) 
-                                table[index++].price = false ;
-                            else 
+                            //printf("retal %d, price %d\n", rental, price) ;
+                            if (rental<=price) 
                                 table[index++].price = true ;
+                            else 
+                                table[index++].price = false ;
                             free(content_) ;
                             break ;
                         }
@@ -213,10 +214,10 @@ int main(int argc, char *argv[])
                             memcpy(content_, &buffer[token_array[j].start], strsize_) ;
                             content_[strsize_] = 0x0 ;
                             int input_age = atoi(content_) ;
-                            if (age>input_age) 
-                                table[index++].age = false ;
-                            else 
+                            if (age<=input_age) 
                                 table[index++].age = true ;
+                            else 
+                                table[index++].age = false ;
                             free(content_) ;
                             break ;
                         }
@@ -242,8 +243,10 @@ int main(int argc, char *argv[])
                             char *content_ = (char*)malloc((strsize_) * sizeof(char)) ;
                             memcpy(content_, &buffer[token_array[j].start], strsize_) ;
                             content_[strsize_] = 0x0 ;
+
                             char *str = strstr(content_, genre) ;
-                            if (str==NULL)
+                            //printf("%s, %s, %p\n", content_, genre, str) ;
+                            if (str == 0x0)
                                 table[index++].genre = false ;
                             else 
                                 table[index++].genre = true ;
