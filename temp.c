@@ -214,7 +214,7 @@ int main(int argc, char *argv[])
                             memcpy(content_, &buffer[token_array[j].start], strsize_) ;
                             content_[strsize_] = 0x0 ;
                             int input_age = atoi(content_) ;
-                            if (age<=input_age) 
+                            if (age>=input_age) 
                                 table[index++].age = true ;
                             else 
                                 table[index++].age = false ;
@@ -264,6 +264,8 @@ int main(int argc, char *argv[])
             printf("========= Recommendation =========\n") ;
             int flag = 0 ;
             for (int k=0 ; k<index ; k++) {
+                char compare[16] ;
+                sprintf(compare, "board game %d", k+1) ;
                 //printf("%d %d %d %d\n",table[k].player, table[k].price, table[k].age, table[k].genre) ;
                 if (table[k].age==true && table[k].genre==true && table[k].player==true && table[k].price==true) {
                     flag = 1 ;
@@ -274,8 +276,7 @@ int main(int argc, char *argv[])
                         char *content = (char*)malloc((strsize) * sizeof(char)) ;
                         memcpy(content, &buffer[token_array[i].start+1], strsize) ;
                         content[strsize] = 0x0 ;
-                        char compare[16] ;
-                        sprintf(compare, "board game %d", k+1) ;
+                        //printf("%d | %s\n", k, compare) ;
                         if (strcmp(compare, content)==0) {
                             value = i ;   
                             for (int j=0 ; j<token_index ; j++) {
