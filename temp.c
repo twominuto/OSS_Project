@@ -245,12 +245,14 @@ int main(int argc, char *argv[])
                             content_[strsize_] = 0x0 ;
 
                             char *str = strstr(content_, genre) ;
-                            //printf("%s, %s, %p\n", content_, genre, str) ;
-                            if (str == 0x0)
-                                table[index++].genre = false ;
-                            else 
-                                table[index++].genre = true ;
-
+                            //printf("index %d, %s, %s, %p\n", index+1, content_, genre, str) ;
+                            if (str == 0x0) {
+                                table[index].genre = false ;
+                                //printf("index %d, %s, %s, %p\n", index+1, content_, genre, str) ;
+                            } else {
+                                table[index].genre = true ;
+                            } 
+                            index += 1 ;
                             free(content_) ;
                             break ;
                         }
@@ -273,7 +275,7 @@ int main(int argc, char *argv[])
                         memcpy(content, &buffer[token_array[i].start+1], strsize) ;
                         content[strsize] = 0x0 ;
                         char compare[16] ;
-                        sprintf(compare, "board game %d", k) ;
+                        sprintf(compare, "board game %d", k+1) ;
                         if (strcmp(compare, content)==0) {
                             value = i ;   
                             for (int j=0 ; j<token_index ; j++) {
